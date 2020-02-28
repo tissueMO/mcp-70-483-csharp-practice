@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -19,23 +21,94 @@ namespace MCP_70_483_CSharpPractice {
         }
     }
 
+    /// <summary>
+    /// IDisposable を実装してみる
+    /// </summary>
+    public class FileWrapper : IDisposable {
+
+        public FileStream File {
+            get;
+            private set;
+        }
+
+        public FileWrapper(string path) {
+            this.File = System.IO.File.Open(path, FileMode.Open);
+        }
+
+        public void Dispose() {
+            this.File.Close();
+        }
+    }
+
+    /// <summary>
+    /// IComparable を実装してみる
+    /// 文字列に含まれる数字だけを抽出してソートできるようにする
+    /// </summary>
+    public class StringWrapper : IComparable {
+
+        public string String {
+            get; set;
+        }
+
+        public int CompareTo(object obj) {
+            var target = obj as StringWrapper;
+            var x = int.Parse(new Regex(@"[^0-9]").Replace(this.String, ""));
+            var y = int.Parse(new Regex(@"[^0-9]").Replace(target?.String ?? "", ""));
+            return x - y;
+        }
+    }
+
+    /// <summary>
+    /// メインクラス
+    /// </summary>
     public partial class Main : Form {
 
         public Main() {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         private void Form1_Load(object sender, EventArgs e) {
             this.parallelTest();
             this.parameterTest();
             this.indexerTest();
+            this.implementDisposeTest();
+            this.implementCompareTest();
             System.Diagnostics.Debug.WriteLine($"SumExtendTest: x=1, y=2 -> {1.SumExtendTest(2)}");
         }
 
+        private void implementCompareTest() {
+            var stringList = new List<StringWrapper>() {
+                new StringWrapper() { String = "abc5def4ghi3jkl" },
+                new StringWrapper() { String = "opq1rst2uvw3xyz" },
+            };
+            System.Diagnostics.Debug.WriteLine("BeforeSort:");
+            foreach (var str in stringList) {
+                System.Diagnostics.Debug.WriteLine($"{str.String}");
+            }
+            stringList.Sort();
+            System.Diagnostics.Debug.WriteLine("AfterSort:");
+            foreach (var str in stringList) {
+                System.Diagnostics.Debug.WriteLine($"{str.String}");
+            }
+        }
+
+        private void implementDisposeTest() {
+            using (var fileManager = new FileWrapper(@"C:\c\tomcat.log")) {
+                fileManager.File.Write(new byte[0], 0, 0);
+            }
+        }
+
+        /// <summary>
+        /// インデクサーで対象にする辞書
+        /// </summary>
         private Dictionary<string, object> objDictionary = new Dictionary<string, object>();
 
+        /// <summary>
+        /// インデクサーを試してみる
+        /// ついでに get/set をラムダ式で定義してみる
+        /// </summary>
         public object this[string key] {
-            get => (this.objDictionary.ContainsKey(key) ? this.objDictionary[key] : null);
+            get => this.objDictionary.ContainsKey(key) ? this.objDictionary[key] : null;
             set => this.objDictionary[key] = value;
         }
 
@@ -45,6 +118,9 @@ namespace MCP_70_483_CSharpPractice {
             System.Diagnostics.Debug.WriteLine($"this[TEST]={this["TEST"]}");
         }
 
+        /// <summary>
+        /// 名前付き引数を試してみる
+        /// </summary>
         private void parameterTest() {
             this.namedParameterTest(1, b: 2);
             this.namedParameterTest(a: 1, 2);
@@ -63,9 +139,10 @@ namespace MCP_70_483_CSharpPractice {
             }
         }
 
+        /// <summary>
+        /// 非同期処理を試してみる
+        /// </summary>
         private void parallelTest() {
-            System.Diagnostics.Debug.WriteLine("並列処理のテスト");
-
             // 単純な関数の並列呼び出し
             // Parallel.Invoke(parallelFuncA, parallelFuncB, parallelFuncC);  // AはOK、Bは引数あるのでNG、Cは戻り値がvoidじゃないのでNG
 
