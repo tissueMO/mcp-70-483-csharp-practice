@@ -1,8 +1,12 @@
 ﻿using System;
+using System.CodeDom;
+using System.CodeDom.Compiler;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -59,6 +63,97 @@ namespace MCP_70_483_CSharpPractice {
     }
 
     /// <summary>
+    /// IEnumerable/IEnumerator を実装してみる
+    /// </summary>
+    public class MyList : IEnumerable<string> {
+
+        /// <summary>
+        /// foreach で使われるイテレーション機構
+        /// </summary>
+        public class MyListEnumerator : IEnumerator<string> {
+
+            public List<string> innerList = new List<string>();
+
+            private int index = -1;
+
+            public object Current {
+                get {
+                    return (this.index < this.innerList.Count) ? this.innerList[this.index] : null;
+                }
+            }
+
+            string IEnumerator<string>.Current {
+                get {
+                    return this.Current as string;
+                }
+            }
+
+            public void Dispose() {
+            }
+
+            public bool MoveNext() {
+                this.index++;
+                return this.index < this.innerList.Count;
+            }
+
+            public void Reset() {
+                this.index = -1;
+            }
+        }
+
+        public List<string> innerList = new List<string>();
+
+        public IEnumerator<string> GetEnumerator() {
+            return new MyListEnumerator() {
+                innerList = this.innerList
+            };
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() {
+            return this.GetEnumerator();
+        }
+    }
+
+    /// <summary>
+    /// 自作属性を試してみる
+    /// パラメーターにこの属性を仕込んだものについて、Nullチェックを行えるようにする
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public class NonNullParameterAttribute : Attribute {
+        /// <summary>
+        /// この属性の基本機能
+        /// </summary>
+        private bool validate(object obj) {
+            return !(obj is null);
+        }
+
+        /// <summary>
+        /// 型情報、メソッド名、引数の値を渡すことで自作属性が付いているものについて、Nullチェックを行う
+        /// </summary>
+        public static bool Validate(Type type, string methodName, object[] arguments) {
+            var methodInfo = type.GetMethod(methodName, BindingFlags.InvokeMethod | BindingFlags.NonPublic | BindingFlags.Instance);
+
+            if (methodInfo.GetParameters().Length != arguments.Length) {
+                throw new ArgumentException("この関数が持つ引数の数と、バリデーション対象の引数の数が一致しません。", "arguments");
+            }
+
+            for (var i = 0; i < arguments.Length; i++) {
+                var param = methodInfo.GetParameters()[i];
+                var arg = arguments[i];
+
+                if (param.GetCustomAttributes(typeof(NonNullParameterAttribute), true).Length == 0) {
+                    continue;
+                } else if (!(param.GetCustomAttribute(typeof(NonNullParameterAttribute), true)
+                        as NonNullParameterAttribute).validate(arg)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    /// <summary>
     /// メインクラス
     /// </summary>
     public partial class Main : Form {
@@ -68,14 +163,69 @@ namespace MCP_70_483_CSharpPractice {
         }
 
         private void Form1_Load(object sender, EventArgs e) {
+            this.helloWorldByDynamicCode();
+            this.notNullValidationTest(sender, e);
+            this.notNullValidationTest(null, e);
             this.parallelTest();
             this.parameterTest();
             this.indexerTest();
-            this.implementDisposeTest();
             this.implementCompareTest();
+            this.implementDisposeTest();
+            this.implementEnumerateTest();
             System.Diagnostics.Debug.WriteLine($"SumExtendTest: x=1, y=2 -> {1.SumExtendTest(2)}");
         }
 
+        /// <summary>
+        /// 動的に C# コードを生成して Hello World してみる
+        /// </summary>
+        private void helloWorldByDynamicCode() {
+            // コード生成
+            var nameSpace = new CodeNamespace("HelloWorld");
+
+            var mainClass = new CodeTypeDeclaration("MainClass");
+            nameSpace.Types.Add(mainClass);
+
+            var mainMethod = new CodeMemberMethod() {
+                Attributes = MemberAttributes.Public | MemberAttributes.Static,
+                Name = "MainMethod",
+                ReturnType = new CodeTypeReference(typeof(string)),
+            };
+            mainMethod.Statements.Add(new CodeMethodReturnStatement(
+                new CodePrimitiveExpression("Hello World. by dynamic generated code.")
+            ));
+            mainClass.Members.Add(mainMethod);
+
+            // アセンブリ生成
+            var codeCompileUnit = new CodeCompileUnit();
+            codeCompileUnit.Namespaces.Add(nameSpace);
+            codeCompileUnit.ReferencedAssemblies.Add("System.dll");
+            var compileResults = CodeDomProvider.CreateProvider("C#").CompileAssemblyFromDom(new CompilerParameters {
+                GenerateInMemory = true
+            }, codeCompileUnit);
+
+            // メモリ内で生成したアセンブリを実行
+            var asm = compileResults.CompiledAssembly;
+            var entryClass = asm.GetType("HelloWorld.MainClass");
+            var entryMethod = entryClass?.GetMethod("MainMethod");
+
+            // メソッドを実行し、戻り値を受け取る
+            var result = entryMethod.Invoke(null, null) as string;
+            System.Diagnostics.Debug.WriteLine($"DynamicCodeResult: {result}");
+        }
+
+        /// <summary>
+        /// 自作属性を試してみる
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void notNullValidationTest([NonNullParameter] object sender, EventArgs e) {
+            var isValid = NonNullParameterAttribute.Validate(this.GetType(), MethodBase.GetCurrentMethod().Name, new object[] { sender, e });
+            System.Diagnostics.Debug.WriteLine($"NullCheck: {isValid}");
+        }
+
+        /// <summary>
+        /// ソートを実行して独自比較処理が行われることを確認する
+        /// </summary>
         private void implementCompareTest() {
             var stringList = new List<StringWrapper>() {
                 new StringWrapper() { String = "abc5def4ghi3jkl" },
@@ -92,9 +242,35 @@ namespace MCP_70_483_CSharpPractice {
             }
         }
 
+        /// <summary>
+        /// using構文を使用して独自破棄処理が行われることを確認する
+        /// </summary>
         private void implementDisposeTest() {
             using (var fileManager = new FileWrapper(@"C:\c\tomcat.log")) {
                 fileManager.File.Write(new byte[0], 0, 0);
+            }
+        }
+
+        /// <summary>
+        /// foreach文を使用して独自イテレーション処理が行われることを確認する
+        /// </summary>
+        private void implementEnumerateTest() {
+            var list = new MyList() {
+                innerList = new List<string>() {
+                    "TEST-001",
+                    "TEST-002",
+                    "TEST-003",
+                    "TEST-004",
+                    "TEST-005",
+                    "TEST-006",
+                    "TEST-007",
+                    "TEST-008",
+                    "TEST-009",
+                    "TEST-010",
+                }
+            };
+            foreach (var item in list) {
+                System.Diagnostics.Debug.WriteLine($"Enumerate: {item}");
             }
         }
 
@@ -131,6 +307,9 @@ namespace MCP_70_483_CSharpPractice {
             // this.namedParameterTest(b: 2, a: 1, false); // 位置引数と名前付き引数を混ぜて順序入れ替えるのはNG
         }
 
+        /// <summary>
+        /// 名前付き引数を試してみる
+        /// </summary>
         private int namedParameterTest(int a, int b, bool mode = false) {
             if (mode) {
                 return a + b;
