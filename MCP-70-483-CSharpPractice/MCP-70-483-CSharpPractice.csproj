@@ -63,12 +63,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
+    <Compile Include="Attributes\NonNullParameterAttribute.cs" />
+    <Compile Include="Extensions\IntegerOriginalExtension.cs" />
+    <Compile Include="Interfaces\FileWrapper.cs" />
+    <Compile Include="Interfaces\MyList.cs" />
+    <Compile Include="Interfaces\StringWrapper.cs" />
+    <Compile Include="Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\SubTests\DynamicCodeTest.cs" />
+    <Compile Include="Tests\SubTests\EnumFormatStringTest.cs" />
+    <Compile Include="Tests\SubTests\ImplementCompareTest.cs" />
+    <Compile Include="Tests\SubTests\ImplementDisposeTest.cs" />
+    <Compile Include="Tests\SubTests\ImplementEnumerateTest.cs" />
+    <Compile Include="Tests\SubTests\IndexerTest.cs" />
+    <Compile Include="Tests\IRunnable.cs" />
+    <Compile Include="Tests\MainTester.cs" />
+    <Compile Include="Tests\SubTests\IntegerOriginalExtensionTest.cs" />
+    <Compile Include="Tests\SubTests\NamedParameterTest.cs" />
+    <Compile Include="Tests\SubTests\NotNullParameterValidationTest.cs" />
+    <Compile Include="Tests\SubTests\ParallelTest.cs" />
+    <Compile Include="Tests\SubTests\StringFormatTest.cs" />
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
