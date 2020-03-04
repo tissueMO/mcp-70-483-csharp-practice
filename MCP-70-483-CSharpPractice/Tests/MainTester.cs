@@ -28,7 +28,16 @@ namespace MCP_70_483_CSharpPractice.Tests {
             new EnumFormatStringTest().Run();
             new StringFormatTest().Run();
             new IntegerOriginalExtensionTest().Run();
-            new JsonParseTest().Run();
+            new CryptoTest().Run();
+            new HashTest().Run();
+            new WriteToEventLogTest().Run();
+            new NLogLoggingTest().Run();
+            new PerformanceCounterTest().Run();
+            new AsyncIOTest().Run();
+            new JsonSerializeTest().Run();
+            new XmlSerializeTest().Run();
+            new BinarySerializeTest().Run();
+            new CustomSerializeTest().Run();
         }
 
     }

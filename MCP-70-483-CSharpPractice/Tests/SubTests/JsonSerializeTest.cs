@@ -13,7 +13,7 @@ namespace MCP_70_483_CSharpPractice.Tests.SubTests {
     /// <summary>
     /// 標準ライブラリーでJSONシリアライズ/デシリアライズを試してみる
     /// </summary>
-    public class JsonParseTest : IRunnable {
+    public class JsonSerializeTest : IRunnable {
 
         public void Run() {
             // デシリアライズ
@@ -46,86 +46,84 @@ namespace MCP_70_483_CSharpPractice.Tests.SubTests {
             }
         }
 
-    }
-
-    /// <summary>
-    /// JSONシリアライズ/デシリアライズ対象のクラス
-    /// </summary>
-    [DataContract]
-    public class CMSLayout {
-
-        [DataContract]
-        public class CMSAlign {
-
-            [DataMember(Name = "name")]
-            public string Name {
-                get; set;
-            } = "";
-
-            [DataMember(Name = "blocks")]
-            public List<CMSBlock> Blocks {
-                get; set;
-            } = new List<CMSBlock>();
-
-        }
-
-        [DataContract]
-        public class CMSBlock {
-
-            [DataMember(Name = "name")]
-            public string Name {
-                get; set;
-            } = "";
-
-            [DataMember(Name = "file")]
-            public string FileName {
-                get; set;
-            } = "";
-
-        }
-
-        [DataContract]
-        public class CMSTemplate {
-
-            [DataMember(Name = "name")]
-            public string Name {
-                get; set;
-            } = "";
-
-            [DataMember(Name = "file")]
-            public string FileName {
-                get; set;
-            } = "";
-
-            [DataMember(Name = "aligns")]
-            public List<CMSAlign> Aligns {
-                get; set;
-            } = new List<CMSAlign>();
-
-        }
-
-        [DataMember(Name = "name")]
-        public string Name {
-            get; set;
-        } = "";
-
-        [DataMember(Name = "description")]
-        public string Description {
-            get; set;
-        } = "";
-
-        [DataMember(Name = "template")]
-        public CMSTemplate Template {
-            get; set;
-        } = new CMSTemplate();
-
         /// <summary>
-        /// あえてシリアライズ対象から外してみる
+        /// JSONシリアライズ/デシリアライズ対象のクラス
         /// </summary>
-        public string Comment {
-            get; set;
-        } = "";
+        [DataContract]
+        public class CMSLayout {
 
+            [DataContract]
+            public class CMSAlign {
+
+                [DataMember(Name = "name")]
+                public string Name {
+                    get; set;
+                } = "";
+
+                [DataMember(Name = "blocks")]
+                public List<CMSBlock> Blocks {
+                    get; set;
+                } = new List<CMSBlock>();
+
+            }
+
+            [DataContract]
+            public class CMSBlock {
+
+                [DataMember(Name = "name")]
+                public string Name {
+                    get; set;
+                } = "";
+
+                [DataMember(Name = "file")]
+                public string FileName {
+                    get; set;
+                } = "";
+
+            }
+
+            [DataContract]
+            public class CMSTemplate {
+
+                [DataMember(Name = "name")]
+                public string Name {
+                    get; set;
+                } = "";
+
+                [DataMember(Name = "file")]
+                public string FileName {
+                    get; set;
+                } = "";
+
+                [DataMember(Name = "aligns")]
+                public List<CMSAlign> Aligns {
+                    get; set;
+                } = new List<CMSAlign>();
+
+            }
+
+            [DataMember(Name = "name")]
+            public string Name {
+                get; set;
+            } = "";
+
+            [DataMember(Name = "description")]
+            public string Description {
+                get; set;
+            } = "";
+
+            [DataMember(Name = "template")]
+            public CMSTemplate Template {
+                get; set;
+            } = new CMSTemplate();
+
+            /// <summary>
+            /// あえてシリアライズ対象から外してみる
+            /// </summary>
+            public string Comment {
+                get; set;
+            } = "";
+
+        }
     }
-
 }
