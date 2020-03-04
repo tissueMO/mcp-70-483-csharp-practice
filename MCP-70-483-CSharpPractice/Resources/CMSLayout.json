@@ -1,0 +1,38 @@
+﻿{
+  "name": "トップページ",
+  "description": "ポータルの総合トップページです。",
+  "template": {
+    "name": "トップページテンプレート",
+    "file": "template_top.html",
+    "aligns": [
+      {
+        "name": "HEAD",
+        "blocks": [
+          {
+            "name": "ポータルHEAD",
+            "file": "block_top_head.html"
+          }
+        ]
+      },
+      {
+        "name": "BODY",
+        "blocks": [
+          {
+            "name": "ポータルBODY",
+            "file": "block_top_body.html"
+          }
+        ]
+      },
+      {
+        "name": "FOOT",
+        "blocks": [
+          {
+            "name": "ポータルFOOT",
+            "file": "block_top_foot.html"
+          }
+        ]
+      }
+    ]
+  },
+  "comment": "レイアウトコメント"
+}

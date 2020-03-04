@@ -52,6 +52,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -85,6 +86,7 @@
     <Compile Include="Tests\IRunnable.cs" />
     <Compile Include="Tests\MainTester.cs" />
     <Compile Include="Tests\SubTests\IntegerOriginalExtensionTest.cs" />
+    <Compile Include="Tests\SubTests\JsonParseTest.cs" />
     <Compile Include="Tests\SubTests\NamedParameterTest.cs" />
     <Compile Include="Tests\SubTests\NotNullParameterValidationTest.cs" />
     <Compile Include="Tests\SubTests\ParallelTest.cs" />
@@ -110,6 +112,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\CMSLayout.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

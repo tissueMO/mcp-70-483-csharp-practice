@@ -28,6 +28,7 @@ namespace MCP_70_483_CSharpPractice.Tests {
             new EnumFormatStringTest().Run();
             new StringFormatTest().Run();
             new IntegerOriginalExtensionTest().Run();
+            new JsonParseTest().Run();
         }
 
     }
