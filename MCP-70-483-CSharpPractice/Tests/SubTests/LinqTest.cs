@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace MCP_70_483_CSharpPractice.Tests.SubTests {
 
@@ -17,6 +18,7 @@ namespace MCP_70_483_CSharpPractice.Tests.SubTests {
             this.basicLinq();
             this.linqQueryJoin();
             this.standardQueryOperators();
+            this.linqToXml();
         }
 
         /// <summary>
@@ -293,6 +295,9 @@ namespace MCP_70_483_CSharpPractice.Tests.SubTests {
             );
         }
 
+        /// <summary>
+        /// シーケンスや任意のオブジェクトを統一フォーマットで出力
+        /// </summary>
         private void printEnumerableObject(string prefix, object obj) {
             if (obj is IEnumerable) {
                 foreach (var item in obj as IEnumerable) {
@@ -302,6 +307,75 @@ namespace MCP_70_483_CSharpPractice.Tests.SubTests {
                 // シーケンスではない場合は型名も添える
                 Debug.WriteLine($"LINQ [{prefix}]: {obj} [{obj?.GetType()?.Name}]");
             }
+        }
+
+        /// <summary>
+        /// LINQ to XML を試してみる
+        /// </summary>
+        private void linqToXml() {
+            // XMLドキュメントを作る [C]
+            var xmlDocument = new XDocument(
+                new XDeclaration("1.0", "utf-8", null),
+                new XComment("学生情報"),
+                new XElement(
+                    "Students",
+                    new XElement(
+                        "Student",
+                        new XAttribute("id", 1),
+                        new XAttribute("name", "Taro"),
+                        new XText("97")
+                    ),
+                    new XElement(
+                        "Student",
+                        new XAttribute("id", 2),
+                        new XAttribute("name", "Jiro"),
+                        new XText("92")
+                    ),
+                    new XElement(
+                        "Student",
+                        new XAttribute("id", 3),
+                        new XAttribute("name", "Saburo"),
+                        new XText("81")
+                    ),
+                    new XElement(
+                        "Student",
+                        new XAttribute("id", 4),
+                        new XAttribute("name", "Shiro"),
+                        new XText("60")
+                    )
+                )
+            );
+            xmlDocument.Save("scores.origin.xml");
+
+            // XMLドキュメントを読み込む [R]
+            var xmlDom = XDocument.Load("scores.origin.xml");
+            var students = xmlDom.Element("Students").Elements("Student");
+            var upper90 = students
+                .Where(dom => 90 <= int.Parse(dom.Value))
+                .Select(dom => (
+                    dom.Attribute("id").Value,
+                    dom.Attribute("name").Value,
+                    dom.Value
+                ));
+            this.printEnumerableObject(
+                "XMLからRead->90以上の学生",
+                upper90
+            );
+
+            // XML構造を変更する [U, D]
+            // トップのデータを削除
+            var highestStudent = students
+                .OrderByDescending(dom => int.Parse(dom.Value))
+                .First();
+            highestStudent.Remove();
+
+            // ビリの点数改ざん
+            var lowestStudent = students
+                .OrderBy(dom => int.Parse(dom.Value))
+                .First();
+            lowestStudent.Value = "100";
+
+            xmlDom.Save("scores.modified.xml");
         }
 
     }
