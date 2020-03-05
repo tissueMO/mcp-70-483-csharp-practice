@@ -17,6 +17,7 @@ namespace MCP_70_483_CSharpPractice.Tests {
         /// 一連のテストタスクを実行します。
         /// </summary>
         public static void RunTests() {
+            new LinqTest().Run();
             new DynamicCodeTest().Run();
             new NotNullParameterValidationTest().Run();
             new ParallelTest().Run();
@@ -38,6 +39,8 @@ namespace MCP_70_483_CSharpPractice.Tests {
             new XmlSerializeTest().Run();
             new BinarySerializeTest().Run();
             new CustomSerializeTest().Run();
+            new DBMySQLTest().Run();
+            new HTTPRequestTest().Run();
         }
 
     }
