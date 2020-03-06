@@ -121,6 +121,7 @@
     <Compile Include="Tests\SubTests\CustomSerializeTest.cs" />
     <Compile Include="Tests\SubTests\DBMySQLTest.cs" />
     <Compile Include="Tests\SubTests\DynamicCodeTest.cs" />
+    <Compile Include="Tests\SubTests\DynamicTypeTest.cs" />
     <Compile Include="Tests\SubTests\EnumFormatStringTest.cs" />
     <Compile Include="Tests\SubTests\HashTest.cs" />
     <Compile Include="Tests\SubTests\HTTPRequestTest.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Tests\SubTests\ParallelTest.cs" />
     <Compile Include="Tests\SubTests\PerformanceCounterTest.cs" />
     <Compile Include="Tests\SubTests\StringFormatTest.cs" />
+    <Compile Include="Tests\SubTests\WeekReferenceTest.cs" />
     <Compile Include="Tests\SubTests\WriteToEventLogTest.cs" />
     <Compile Include="Tests\SubTests\XmlSerializeTest.cs" />
     <EmbeddedResource Include="Main.resx">
