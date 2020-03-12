@@ -117,6 +117,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\SubTests\AsyncIOTest.cs" />
     <Compile Include="Tests\SubTests\BinarySerializeTest.cs" />
+    <Compile Include="Tests\SubTests\ConstructorTest.cs" />
     <Compile Include="Tests\SubTests\CryptoTest.cs" />
     <Compile Include="Tests\SubTests\CustomSerializeTest.cs" />
     <Compile Include="Tests\SubTests\DBMySQLTest.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Tests\SubTests\ParallelTest.cs" />
     <Compile Include="Tests\SubTests\PerformanceCounterTest.cs" />
     <Compile Include="Tests\SubTests\StringFormatTest.cs" />
+    <Compile Include="Tests\SubTests\StructTest.cs" />
     <Compile Include="Tests\SubTests\WeekReferenceTest.cs" />
     <Compile Include="Tests\SubTests\WriteToEventLogTest.cs" />
     <Compile Include="Tests\SubTests\XmlSerializeTest.cs" />
