@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MCP_70_483_CSharpPractice.Tests.SubTests {
@@ -12,6 +13,9 @@ namespace MCP_70_483_CSharpPractice.Tests.SubTests {
     /// 非同期処理を試してみる
     /// </summary>
     public class ParallelTest : IRunnable {
+
+        object sumLock;
+
 
         public void Run() {
             // 単純な関数の並列呼び出し
@@ -24,12 +28,20 @@ namespace MCP_70_483_CSharpPractice.Tests.SubTests {
             var rangeFor0to10 = Enumerable.Range(0, 10);
             Parallel.ForEach(rangeFor0to10, i => Debug.WriteLine($"Parallel.ForEach: {i}"));  // 0-9 までの数字が出力される
 
+            // スレッドプールを明示的に使う
+            for (int i = 0; i < 10; i++) {
+                ThreadPool.QueueUserWorkItem(new WaitCallback(ii => {
+                    Debug.WriteLine($"ThreadPool.QueueUserWorkItem [{(int) ii}]: スレッドプールからメソッド実行");
+                }), i);
+            }
+
             // lockステートメント
             var sum = 0;
-            var sumLock = new object();  // 同じ共有リソース(sum)をロックしたい場合は同じロックオブジェクトを使用する
+            this.sumLock = new object();  // 同じ共有リソース(sum)をロックしたい場合は同じロックオブジェクトを使用する
             var arrayForTotal = Enumerable.Repeat(1, 10);
             Parallel.ForEach(arrayForTotal, i => {
-                lock (sumLock) {
+                // この中に同時に入れるのは全スレッドの中で1つだけ
+                lock (this.sumLock) {
                     sum += i;
                 }
             });

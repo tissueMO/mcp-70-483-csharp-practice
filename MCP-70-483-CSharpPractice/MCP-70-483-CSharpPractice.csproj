@@ -134,10 +134,12 @@
     <Compile Include="Tests\MainTester.cs" />
     <Compile Include="Tests\SubTests\IntegerOriginalExtensionTest.cs" />
     <Compile Include="Tests\SubTests\JsonSerializeTest.cs" />
+    <Compile Include="Tests\SubTests\LambdaTest.cs" />
     <Compile Include="Tests\SubTests\LinqTest.cs" />
     <Compile Include="Tests\SubTests\NamedParameterTest.cs" />
     <Compile Include="Tests\SubTests\NLogLoggingTest.cs" />
     <Compile Include="Tests\SubTests\NotNullParameterValidationTest.cs" />
+    <Compile Include="Tests\SubTests\OverflowCheckedTest.cs" />
     <Compile Include="Tests\SubTests\ParallelTest.cs" />
     <Compile Include="Tests\SubTests\PerformanceCounterTest.cs" />
     <Compile Include="Tests\SubTests\StringFormatTest.cs" />

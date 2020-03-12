@@ -17,6 +17,8 @@ namespace MCP_70_483_CSharpPractice.Tests {
         /// 一連のテストタスクを実行します。
         /// </summary>
         public static void RunTests() {
+            new OverflowCheckedTest().Run();
+            new LambdaTest().Run();
             new WeekReferenceTest().Run();
             new DynamicTypeTest().Run();
             new LinqTest().Run();
