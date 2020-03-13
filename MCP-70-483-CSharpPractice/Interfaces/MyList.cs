@@ -21,15 +21,23 @@ namespace MCP_70_483_CSharpPractice.Interfaces {
 
             private int index = -1;
 
-            public object Current {
+            /// <summary>
+            /// インターフェースの明示的な実装 その1
+            /// IEnumerator に明示的にキャストしないとこの Current は参照できない
+            /// </summary>
+            object IEnumerator.Current {
                 get {
                     return (this.index < this.innerList.Count) ? this.innerList[this.index] : null;
                 }
             }
 
+            /// <summary>
+            /// インターフェースの明示的な実装 その2
+            /// IEnumerator<string> に明示的にキャストしないとこの Current は参照できない
+            /// </summary>
             string IEnumerator<string>.Current {
                 get {
-                    return this.Current as string;
+                    return ((IEnumerator)this).Current as string;
                 }
             }
 
@@ -54,6 +62,11 @@ namespace MCP_70_483_CSharpPractice.Interfaces {
             };
         }
 
+        /// <summary>
+        /// インターフェースの明示的な実装
+        /// IEnumerator に明示的にキャストしないと呼び出せないようにする
+        /// しかも public ではないので外からは隠蔽したことにする
+        /// </summary>
         IEnumerator IEnumerable.GetEnumerator() {
             return this.GetEnumerator();
         }
