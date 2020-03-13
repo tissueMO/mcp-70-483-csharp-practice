@@ -75,12 +75,15 @@ namespace MCP_70_483_CSharpPractice.Tests.SubTests {
             var scoreQuery =
                 from student in students
                 join score in scores on student.Item1 equals score.Item1
+                // 匿名型を作って射影
                 select new {
                     student,
-                    score
+                    score,
+                    max = 100
                 };
             foreach (var item in scoreQuery) {
-                Debug.WriteLine($"生徒の名前と点数紐づけ: {item.student.Item2}={item.score.Item2}");
+                // フィールド名を持たせなかった匿名型に対するフィールド参照は [from xxx in yyy] の xxx に相当する部分の名前となる
+                Debug.WriteLine($"生徒の名前と点数紐づけ: {item.student.Item2}={item.score.Item2}/{item.max}");
             }
         }
 
