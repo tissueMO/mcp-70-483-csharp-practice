@@ -14,8 +14,15 @@ namespace MCP_70_483_CSharpPractice.Tests.SubTests {
     /// </summary>
     public class ParallelTest : IRunnable {
 
-        object sumLock;
-
+        /// <summary>
+        /// ロック用のオブジェクト: こいつを握っている間は他のスレッドはこれを握れず待ち状態にされる
+        /// </summary>
+        private object sumLock;
+        
+        /// <summary>
+        /// スレッドローカルな変数
+        /// </summary>
+        private static ThreadLocal<int> threadLocal = new ThreadLocal<int>();
 
         public void Run() {
             // 単純な関数の並列呼び出し
@@ -46,6 +53,22 @@ namespace MCP_70_483_CSharpPractice.Tests.SubTests {
                 }
             });
             Debug.WriteLine($"lock: sum={sum}");
+
+            // スレッドローカルな変数を試してみる
+            Task.WhenAll(
+                Task.Run(() => {
+                    ParallelTest.threadLocal.Value = 1;
+                    Debug.WriteLine($"ThreadLocal (1) = {ParallelTest.threadLocal.Value}");
+                }),
+                Task.Run(() => {
+                    ParallelTest.threadLocal.Value = 2;
+                    Debug.WriteLine($"ThreadLocal (2) = {ParallelTest.threadLocal.Value}");
+                }),
+                Task.Run(() => {
+                    ParallelTest.threadLocal.Value = 3;
+                    Debug.WriteLine($"ThreadLocal (3) = {ParallelTest.threadLocal.Value}");
+                }))
+                .Wait();
 
             // LINQの並列版: PLINQ: 排他制御は自動でやってくれる
             var rangeFor0to100 = Enumerable.Range(0, 10);
