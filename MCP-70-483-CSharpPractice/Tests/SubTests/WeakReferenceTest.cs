@@ -13,7 +13,7 @@ namespace MCP_70_483_CSharpPractice.Tests.SubTests {
     /// <summary>
     /// 弱参照を試してみる
     /// </summary>
-    public class WeekReferenceTest : IRunnable {
+    public class WeakReferenceTest : IRunnable {
 
         public void Run() {
             // ここでデータを読んで、すぐストリームを捨てる

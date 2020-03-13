@@ -145,7 +145,7 @@
     <Compile Include="Tests\SubTests\PerformanceCounterTest.cs" />
     <Compile Include="Tests\SubTests\StringFormatTest.cs" />
     <Compile Include="Tests\SubTests\StructTest.cs" />
-    <Compile Include="Tests\SubTests\WeekReferenceTest.cs" />
+    <Compile Include="Tests\SubTests\WeakReferenceTest.cs" />
     <Compile Include="Tests\SubTests\WriteToEventLogTest.cs" />
     <Compile Include="Tests\SubTests\XmlSerializeTest.cs" />
     <EmbeddedResource Include="Main.resx">

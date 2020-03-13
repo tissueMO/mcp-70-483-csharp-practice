@@ -20,7 +20,7 @@ namespace MCP_70_483_CSharpPractice.Tests {
             new GenericTest().Run();
             new OverflowCheckedTest().Run();
             new LambdaTest().Run();
-            new WeekReferenceTest().Run();
+            new WeakReferenceTest().Run();
             new DynamicTypeTest().Run();
             new LinqTest().Run();
             new DynamicCodeTest().Run();
