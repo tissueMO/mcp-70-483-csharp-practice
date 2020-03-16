@@ -46,10 +46,10 @@ namespace MCP_70_483_CSharpPractice.Tests.SubTests {
             private set;
         }
 
-        // where句で new() が指定される場合、引数無しコンストラクターにアクセスできなければコンパイルが通らない
-        //private BaseClass() {
-        //}
-        public BaseClass() { }
+        // where句で new() が指定される場合、T の引数無しコンストラクターにアクセスできなければコンパイルが通らない
+        private BaseClass() {
+        }
+        //public BaseClass() { }
 
         protected BaseClass(int value) {
             this.Value = value;
