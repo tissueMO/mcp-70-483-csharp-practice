@@ -27,6 +27,8 @@ namespace MCP_70_483_CSharpPractice.Tests.SubTests {
                 }, i).Start();
             }
 
+            // foreach だと毎回 i が捨てられて代入されるのでその時点のループ変数が正しく出る (C# 5.0 以降の変更)
+            // https://ufcpp.net/study/csharp/start/st_scope/?p=2#foreach-loop-variable
             foreach (var i in Enumerable.Range(0, 5)) {
                 Task.Run(() => {
                     Debug.WriteLine($"LambdaTest-foreach-out: {i}");
